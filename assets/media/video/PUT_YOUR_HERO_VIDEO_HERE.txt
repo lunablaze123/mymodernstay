@@ -1,0 +1,1 @@
+Place your hero video here as hero.mp4 (recommended: 1920x1080, H.264). The homepage expects: assets/media/video/hero.mp4

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Contact — ModernStay</title>
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css?v=11.4"/>
+
+</head>
+<body data-page="contact">
+  <div id="nav"></div>
+  
+<section class="section">
+  <div class="container split">
+    <div class="card fade" style="padding:18px">
+      <div class="badge"><span class="dot"></span><span id="title">Contact</span></div>
+      <p class="sub" id="sub" style="margin-top:10px">Subtitle</p>
+      <div style="margin-top:14px" class="small">
+        <div><strong id="name">ModernStay</strong></div>
+        <div>Email: <span id="email">info@mymodernstay.com</span></div>
+        <div>Phone: <span id="phone">+386 40 000 000</span></div>
+        <div>Address: <span id="addr">—</span></div>
+      </div>
+      <div class="small" id="notice" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card fade" style="padding:18px">
+      <div class="badge"><span class="dot"></span>Message</div>
+      <form id="form" style="margin-top:10px; display:grid; gap:10px">
+        <div class="field"><div class="label">Name</div><input class="input" required></div>
+        <div class="field"><div class="label">Email</div><input class="input" type="email" required></div>
+        <div class="field"><div class="label">Message</div><textarea class="input" rows="6" required style="border-radius:14px; padding:10px 12px; resize:vertical"></textarea></div>
+        <button class="btn primary" type="submit" style="justify-content:center">Send</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+  <div id="footer"></div>
+  <script type="module" src="assets/js/pages/contact.js?v=11.4"></script>
+  <script type="module" src="assets/js/editor/inline-editor.js?v=116"></script>
+  <script type="module" src="assets/js/chatbot/support-bot.js?v=11.4"></script>
+</body>
+</html>
