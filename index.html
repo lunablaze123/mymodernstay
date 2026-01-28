@@ -13,24 +13,25 @@
 </head>
 
 <body data-page="home" class="home">
+
+  <!-- TRUE FIXED FULLSCREEN BACKGROUND (never moves, covers entire screen) -->
+  <div id="fixedHeroBg" aria-hidden="true">
+    <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
+    <img id="heroPoster" alt="Hero" loading="eager"/>
+    <div class="shade" id="heroShade"></div>
+  </div>
+
   <div id="nav"></div>
 
-  <!-- PINNED SCENE -->
+  <!-- SCROLL SCENE (content changes while video stays fixed) -->
   <section id="heroStage" class="stage">
-    <!-- TRUE FIXED background (never moves) -->
-    <div class="stage-bg" id="stageBg" aria-hidden="true">
-      <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
-      <img id="heroPoster" alt="Hero" loading="eager"/>
-      <div class="shade" id="heroShade"></div>
-    </div>
-
-    <!-- Content that scrolls over fixed video -->
     <div class="stage-inner">
       <div class="container">
 
-        <!-- HERO TEXT -->
+        <!-- HERO TEXT (disappears first) -->
         <div class="hero-full-content" id="heroContent">
           <div class="badge" id="kicker"><span class="dot"></span>Luxury Apartments</div>
+
           <div class="h1" id="heroTitle">A modern stay, made simple.</div>
           <p class="p" id="heroSub">Three curated apartments. Clean design. Direct booking.</p>
 
@@ -46,7 +47,7 @@
           </a>
         </div>
 
-        <!-- APARTMENTS ON VIDEO -->
+        <!-- APARTMENTS (appear ON TOP of same video) -->
         <div id="apartmentsInline" class="apartments-inline">
           <div class="section-head" id="apHead">
             <div>
@@ -63,7 +64,7 @@
     </div>
   </section>
 
-  <!-- REST OF SITE (normal background) -->
+  <!-- AFTER THE SCENE, page continues normally (fixed video hides) -->
   <section class="section">
     <div class="container split">
       <div class="card fade" style="padding:18px">
