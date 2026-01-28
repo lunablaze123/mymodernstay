@@ -30,7 +30,6 @@ a{color:inherit; text-decoration:none}
 img{max-width:100%; display:block}
 .container{width:min(var(--max), calc(100% - 40px)); margin:0 auto}
 
-/* Buttons */
 .btn{
   display:inline-flex; align-items:center; gap:10px;
   padding:12px 16px; border-radius:999px;
@@ -44,7 +43,6 @@ img{max-width:100%; display:block}
 .btn.primary{background: linear-gradient(135deg, rgba(124,92,255,0.95), rgba(0,209,255,0.85)); border-color: transparent}
 .btn.ghost{background: transparent}
 
-/* Badge */
 .badge{
   display:inline-flex; align-items:center; gap:8px;
   padding:7px 10px; border-radius:999px;
@@ -55,7 +53,6 @@ img{max-width:100%; display:block}
 }
 .badge .dot{width:8px;height:8px;border-radius:999px;background: linear-gradient(135deg, var(--accent), var(--accent2))}
 
-/* Nav */
 .nav{
   position: fixed; top:0; left:0; right:0;
   z-index: 9990;
@@ -65,21 +62,17 @@ img{max-width:100%; display:block}
   will-change: transform, opacity;
 }
 .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 0}
-.brand{display:flex; align-items:center; gap:12px; font-weight:950; letter-spacing:0.02em}
-.logo{width:36px; height:36px; border-radius:12px; background: linear-gradient(135deg, rgba(124,92,255,0.95), rgba(0,209,255,0.75)); box-shadow: 0 14px 40px rgba(0,0,0,0.35)}
 .menu{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
 .menu a{color: rgba(234,240,255,0.78); font-weight:800; font-size:14px}
 .menu a:hover{color: rgba(234,240,255,0.95)}
 .nav-cta{display:flex; align-items:center; gap:10px}
 .mobile-toggle{display:none;}
 
-/* Text */
 .h1{font-size: 46px; line-height:1.05; margin:12px 0 12px; letter-spacing:-0.02em}
 .p{color: var(--muted); line-height:1.7; font-size:16px; margin:0}
 .h2{margin:0; font-size:26px; letter-spacing:-0.01em}
 .sub{margin:6px 0 0; color: var(--muted); line-height:1.6}
 
-/* Cards */
 .card{
   background: var(--surface);
   border: 1px solid var(--border);
@@ -96,7 +89,14 @@ img{max-width:100%; display:block}
 .ap-card .img{aspect-ratio: 16/10; background: rgba(255,255,255,0.03); overflow:hidden}
 .ap-card .body{padding:16px}
 
-/* Fade-in for other sections */
+/* Normal sections after stage */
+.section{padding:26px 0}
+.section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:14px}
+.split{display:grid; grid-template-columns: 1.1fr 0.9fr; gap:14px; align-items:stretch}
+@media (max-width: 980px){ .split{grid-template-columns:1fr} }
+.iframe{width:100%; border:0; border-radius: calc(var(--radius) + 6px); min-height: 580px; background: rgba(255,255,255,0.02)}
+
+/* Fade-in for lower sections */
 .fade{
   opacity:0;
   transform: translateY(16px) scale(0.995);
@@ -105,32 +105,22 @@ img{max-width:100%; display:block}
 }
 .fade.in{opacity:1; transform: translateY(0) scale(1);}
 
-/* Normal sections after hero stage */
-.section{padding:26px 0}
-.section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:14px}
-.split{display:grid; grid-template-columns: 1.1fr 0.9fr; gap:14px; align-items:stretch}
-@media (max-width: 980px){ .split{grid-template-columns:1fr} }
-.iframe{width:100%; border:0; border-radius: calc(var(--radius) + 6px); min-height: 580px; background: rgba(255,255,255,0.02)}
-
-/* Footer */
-.footer{padding:26px 0 34px; margin-top:12px; border-top:1px solid rgba(234,240,255,0.10); background: rgba(7,10,16,0.55); backdrop-filter: blur(14px)}
-
-/* ===== PINNED HERO STAGE ===== */
+/* ===== PINNED STAGE ===== */
+/* Scroll room for: text out -> apartments in */
 .stage{
   position: relative;
-  height: 220vh;   /* Scroll room: hero text fades, then apartments appear */
-  min-height: 220vh;
-  overflow: clip;
+  height: 240vh;
+  min-height: 240vh;
 }
 
-/* Background stays fixed while you scroll through the stage */
+/* TRUE FIXED background: does NOT move */
 .stage-bg{
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
+  position: fixed;
+  inset: 0;
   z-index: 0;
+  overflow: hidden;
+  opacity: 0;              /* JS turns it on only during stage */
+  pointer-events: none;
   will-change: opacity;
 }
 .stage-bg video,
@@ -148,22 +138,21 @@ img{max-width:100%; display:block}
   will-change: opacity;
 }
 
-/* Content sits over the sticky video */
+/* Content scrolls over the fixed video */
 .stage-inner{
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 1;
 }
 
-/* Hero text block sits at bottom like before */
+/* Hero text block occupies first viewport */
 .hero-full-content{
-  padding: 110px 0 38px;
   max-width: 820px;
   min-height: 100vh;
   min-height: 100svh;
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
+  padding: 110px 0 38px;
   will-change: transform, opacity;
 }
 .hero-full-content .h1{font-size: clamp(44px, 6vw, 84px); line-height:0.98}
@@ -171,13 +160,13 @@ img{max-width:100%; display:block}
 .hero-full-actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
 .hero-underline{display:inline-flex; align-items:center; gap:10px; color: rgba(234,240,255,0.84); font-weight:900; margin-top:14px}
 
-/* Apartments area is below hero inside the same stage */
+/* Apartments appear in the 2nd part of the stage */
 .apartments-inline{
   padding-top: 24px;
-  padding-bottom: 40px;
+  padding-bottom: 60px;
 }
 
-/* Make header transparent on stage */
+/* Homepage nav transparent on stage */
 body.home .nav{
   background: none !important;
   border-bottom: 0 !important;
@@ -186,7 +175,6 @@ body.home .nav{
 }
 body.home{ padding-top: 0 !important; }
 
-/* Mobile menu rules (keep your original behavior) */
 @media (max-width: 920px){
   .menu{display:none !important;}
   .nav-cta>a.btn.ghost{display:none !important;}
