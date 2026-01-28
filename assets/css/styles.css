@@ -11,6 +11,7 @@
   --shadow: 0 28px 90px rgba(0,0,0,0.55);
   --max: 1160px;
 }
+html{ scroll-behavior: smooth; }
 
 *{box-sizing:border-box}
 html,body{
@@ -355,4 +356,30 @@ body.home .hero.hero-full{ margin-top: 0 !important; }
 }
 @media (max-width: 520px){
   .brand span:last-child{ max-width: 150px; }
+}
+/* ==============================
+   FULL-SCREEN HERO ON DESKTOP
+   (so the next section is not visible)
+================================ */
+@media (min-width: 981px){
+  /* hero becomes exactly one full screen */
+  .hero.hero-full{
+    height: 100vh;        /* full screen */
+    min-height: 100vh;
+    padding: 0 !important;
+    overflow: hidden;     /* prevents bleed */
+  }
+
+  /* the inner wrapper also full screen */
+  .hero.hero-full .hero-full-inner{
+    height: 100vh;
+    min-height: 100vh;
+    align-items: flex-end; /* keep your content at the bottom like now */
+  }
+
+  /* Make sure content doesn't push hero taller than the screen */
+  .hero.hero-full .hero-full-content{
+    padding-top: 140px;   /* space for nav area */
+    padding-bottom: 44px; /* nice breathing room */
+  }
 }
