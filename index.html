@@ -11,34 +11,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/styles.css"/>
-
-  <!-- ✅ Force full-screen hero on desktop -->
-  <style>
-    html{ scroll-behavior: smooth; }
-
-    @media (min-width: 981px){
-      body.home #hero{
-        height: 100vh !important;
-        min-height: 100vh !important;
-        padding: 0 !important;
-        overflow: hidden;
-      }
-      body.home #hero .hero-full-inner{
-        height: 100vh !important;
-        min-height: 100vh !important;
-      }
-      /* Keep content from stretching the hero taller than the screen */
-      body.home #hero .hero-full-content{
-        max-height: calc(100vh - 40px);
-      }
-    }
-  </style>
 </head>
 
 <body data-page="home" class="home">
   <div id="nav"></div>
 
-  <!-- HERO -->
+  <!-- HERO (full-screen) -->
   <section id="hero" class="hero hero-full">
     <div class="hero-bg" aria-hidden="true">
       <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
@@ -70,7 +48,7 @@
   <!-- APARTMENTS -->
   <section class="section" id="apartments">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head fade">
         <div>
           <div class="h2" id="apTitle">Choose your apartment</div>
           <p class="sub" id="apSub">Three options. Same standards.</p>
@@ -101,7 +79,7 @@
   <!-- RESIDENCE -->
   <section class="section">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head fade">
         <div>
           <div class="h2" id="resTitle">The Residence</div>
           <p class="sub" id="resSub">Amenities, location and the bigger picture.</p>
@@ -130,7 +108,6 @@
 
   <div id="footer"></div>
 
-  <!-- Scripts -->
   <script type="module" src="assets/js/pages/home.js"></script>
   <script type="module" src="assets/js/editor/inline-editor.js"></script>
   <script type="module" src="assets/js/chatbot/support-bot.js"></script>
