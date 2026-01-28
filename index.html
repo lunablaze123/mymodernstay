@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <title>ModernStay</title>
-
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -16,51 +15,54 @@
 <body data-page="home" class="home">
   <div id="nav"></div>
 
-  <!-- HERO -->
-  <section id="hero" class="hero hero-full">
-    <div class="hero-bg" id="heroBg" aria-hidden="true">
+  <!-- PINNED SCENE (video stays, content changes) -->
+  <section id="heroStage" class="stage">
+    <!-- Fixed background video for the whole scene -->
+    <div class="stage-bg" aria-hidden="true">
       <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
       <img id="heroPoster" alt="Hero" loading="eager"/>
       <div class="shade" id="heroShade"></div>
     </div>
 
-    <div class="container hero-full-inner">
-      <div class="hero-full-content" id="heroContent">
-        <div class="badge" id="kicker"><span class="dot"></span>Luxury Apartments</div>
+    <!-- Scene content -->
+    <div class="stage-inner">
+      <div class="container">
+        <!-- HERO TEXT (goes away first) -->
+        <div class="hero-full-content" id="heroContent">
+          <div class="badge" id="kicker"><span class="dot"></span>Luxury Apartments</div>
 
-        <div class="h1" id="heroTitle">A modern stay, made simple.</div>
-        <p class="p" id="heroSub">Three curated apartments. Clean design. Direct booking.</p>
+          <div class="h1" id="heroTitle">A modern stay, made simple.</div>
+          <p class="p" id="heroSub">Three curated apartments. Clean design. Direct booking.</p>
 
-        <div class="hero-full-actions" id="heroActions">
-          <a class="btn primary" id="heroBookBtn" href="#" target="_blank" rel="noopener">BOOK NOW</a>
-          <a class="btn" id="heroTourBtn" href="#" target="_blank" rel="noopener">TAKE A 3D TOUR</a>
-          <a class="btn ghost" href="apartments.html">View apartments</a>
+          <div class="hero-full-actions" id="heroActions">
+            <a class="btn primary" id="heroBookBtn" href="#" target="_blank" rel="noopener">BOOK NOW</a>
+            <a class="btn" id="heroTourBtn" href="#" target="_blank" rel="noopener">TAKE A 3D TOUR</a>
+            <a class="btn ghost" href="apartments.html">View apartments</a>
+          </div>
+
+          <a class="hero-underline" href="#apartmentsInline">
+            <span style="opacity:.9">Read more</span>
+            <span style="opacity:.7">▾</span>
+          </a>
         </div>
 
-        <a class="hero-underline" href="#apartments">
-          <span style="opacity:.9">Read more</span>
-          <span style="opacity:.7">▾</span>
-        </a>
+        <!-- APARTMENTS ON VIDEO (appear after hero text goes away) -->
+        <div id="apartmentsInline" class="apartments-inline">
+          <div class="section-head" id="apHead">
+            <div>
+              <div class="h2" id="apTitle">Choose your apartment</div>
+              <p class="sub" id="apSub">Three options. Same standards.</p>
+            </div>
+            <a class="btn" href="apartments.html">See all</a>
+          </div>
+
+          <div class="grid3" id="apartmentsGrid"></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- APARTMENTS -->
-  <section class="section" id="apartments">
-    <div class="container">
-      <div class="section-head" id="apHead">
-        <div>
-          <div class="h2" id="apTitle">Choose your apartment</div>
-          <p class="sub" id="apSub">Three options. Same standards.</p>
-        </div>
-        <a class="btn" href="apartments.html">See all</a>
-      </div>
-
-      <div class="grid3" id="apartmentsGrid"></div>
-    </div>
-  </section>
-
-  <!-- TOUR -->
+  <!-- REST OF PAGE CONTINUES NORMALLY -->
   <section class="section">
     <div class="container split">
       <div class="card fade" style="padding:18px">
@@ -76,7 +78,6 @@
     </div>
   </section>
 
-  <!-- RESIDENCE -->
   <section class="section">
     <div class="container">
       <div class="section-head fade">
