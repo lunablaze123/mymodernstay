@@ -3,29 +3,28 @@ import {
   applyTheme,
   mountNav,
   mountFooter,
-  mountFadeIns,
   qs,
   escapeHTML,
   toast
 } from "../app.js";
 
 /* ---------------------------
-   Utility helpers
+   Helpers
 ---------------------------- */
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 
-function typeText(el, text, speed = 40) {
+function typeText(el, text, speed = 45) {
   if (!el) return;
   el.textContent = "";
   let i = 0;
   const interval = setInterval(() => {
-    el.textContent += text[i++];
+    el.textContent += text[i++] ?? "";
     if (i >= text.length) clearInterval(interval);
   }, speed);
 }
 
 /* ---------------------------
-   Scroll progress bar
+   Scroll progress bar (smooth)
 ---------------------------- */
 function mountScrollProgress() {
   const bar = document.createElement("div");
@@ -33,44 +32,82 @@ function mountScrollProgress() {
   bar.style.top = "0";
   bar.style.left = "0";
   bar.style.height = "3px";
-  bar.style.background = "var(--accent, #fff)";
+  bar.style.background = "var(--accent, #7C5CFF)";
   bar.style.zIndex = "9999";
-  bar.style.width = "0%";
+  bar.style.width = "100%";
+  bar.style.transformOrigin = "0 50%";
+  bar.style.transform = "scaleX(0)";
   document.body.appendChild(bar);
 
-  window.addEventListener("scroll", () => {
+  let ticking = false;
+
+  function update() {
     const h = document.documentElement;
-    const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-    bar.style.width = scrolled + "%";
-  });
+    const max = h.scrollHeight - h.clientHeight;
+    const p = max > 0 ? (h.scrollTop / max) : 0;
+    bar.style.transform = `scaleX(${p})`;
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+
+  update();
 }
 
 /* ---------------------------
-   Hero parallax
+   Hero parallax (smooth + safe)
 ---------------------------- */
 function mountHeroParallax() {
   const hero = qs("#hero");
   if (!hero) return;
 
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
+
+  let ticking = false;
+
+  function update() {
+    const y = window.scrollY * 0.18;
+    hero.style.transform = `translate3d(0, ${y}px, 0)`;
+    ticking = false;
+  }
+
   window.addEventListener("scroll", () => {
-    const y = window.scrollY * 0.4;
-    hero.style.transform = `translateY(${y}px)`;
-  });
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+
+  update();
 }
 
 /* ---------------------------
-   Auto-highlight apartments
+   Auto-highlight apartments (paused on hover)
 ---------------------------- */
 function mountApartmentHighlight() {
   const cards = document.querySelectorAll(".ap-card");
   if (!cards.length) return;
 
   let index = 0;
+  let paused = false;
+
+  cards.forEach(c => {
+    c.addEventListener("mouseenter", () => paused = true);
+    c.addEventListener("mouseleave", () => paused = false);
+  });
+
   setInterval(() => {
+    if (paused) return;
     cards.forEach(c => c.classList.remove("active"));
     cards[index].classList.add("active");
     index = (index + 1) % cards.length;
-  }, 3500);
+  }, 3200);
 }
 
 /* ---------------------------
@@ -82,10 +119,59 @@ function mountLazyImages() {
 }
 
 /* ---------------------------
+   Scroll reveal animations (THE MAIN THING YOU WANT)
+   - Anything with class="fade" will animate when it enters view.
+---------------------------- */
+function mountScrollReveal() {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const els = document.querySelectorAll(".fade");
+
+  if (!els.length) return;
+
+  // If user prefers reduced motion, just show everything.
+  if (reduce) {
+    els.forEach(el => el.classList.add("in"));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target); // animate once
+      }
+    });
+  }, { threshold: 0.14 });
+
+  els.forEach(el => io.observe(el));
+}
+
+/* ---------------------------
+   Auto-add "fade" to sections/cards/images if missing
+   (so you don't need to edit HTML manually)
+---------------------------- */
+function autoAddFadeClasses() {
+  const selectors = [
+    ".section",
+    ".section-head",
+    ".card",
+    ".split",
+    ".kpi",
+    ".gallery img",
+    "#tourFrame"
+  ];
+
+  document.querySelectorAll(selectors.join(",")).forEach(el => {
+    // Don't animate navbar/footer containers
+    if (el.closest(".nav") || el.closest(".footer")) return;
+    if (!el.classList.contains("fade")) el.classList.add("fade");
+  });
+}
+
+/* ---------------------------
    MAIN
 ---------------------------- */
 async function main() {
-
   /* Theme + Nav */
   applyTheme(await getJSON("content/settings/theme.json"));
   await mountNav("index.html");
@@ -109,7 +195,7 @@ async function main() {
   if (kicker) kicker.textContent = page.hero?.kicker || "";
   if (title) typeText(title, page.hero?.title || "", 55);
   if (sub) {
-    await sleep(600);
+    await sleep(500);
     sub.textContent = page.hero?.subtitle || "";
   }
 
@@ -191,15 +277,18 @@ async function main() {
     page.sections?.residenceSubtitle || "";
 
   /* ---------------------------
-     GLOBAL EFFECTS
+     EFFECTS (Order matters)
   ---------------------------- */
+  mountLazyImages();
   mountScrollProgress();
   mountHeroParallax();
-  mountApartmentHighlight();
-  mountLazyImages();
 
+  // Add "fade" classes automatically, then reveal them on scroll
+  autoAddFadeClasses();
+  mountScrollReveal();
+
+  mountApartmentHighlight();
   await mountFooter();
-  mountFadeIns();
 }
 
 main();
