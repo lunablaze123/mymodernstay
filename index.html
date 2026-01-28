@@ -21,17 +21,18 @@
     <div class="hero-bg" aria-hidden="true">
       <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
       <img id="heroPoster" alt="Hero" loading="eager"/>
-      <div class="shade"></div>
+      <div class="shade" id="heroShade"></div>
     </div>
 
     <div class="container hero-full-inner">
-      <div class="hero-full-content fade">
+      <!-- NOTE: scrubbed by scroll (NOT .fade) -->
+      <div class="hero-full-content" id="heroContent">
         <div class="badge" id="kicker"><span class="dot"></span>Luxury Apartments</div>
 
         <div class="h1" id="heroTitle">A modern stay, made simple.</div>
         <p class="p" id="heroSub">Three curated apartments. Clean design. Direct booking.</p>
 
-        <div class="hero-full-actions">
+        <div class="hero-full-actions" id="heroActions">
           <a class="btn primary" id="heroBookBtn" href="#" target="_blank" rel="noopener">BOOK NOW</a>
           <a class="btn" id="heroTourBtn" href="#" target="_blank" rel="noopener">TAKE A 3D TOUR</a>
           <a class="btn ghost" href="apartments.html">View apartments</a>
@@ -48,7 +49,8 @@
   <!-- APARTMENTS -->
   <section class="section" id="apartments">
     <div class="container">
-      <div class="section-head fade">
+      <!-- scrubbed by scroll (NOT .fade) -->
+      <div class="section-head" id="apHead">
         <div>
           <div class="h2" id="apTitle">Choose your apartment</div>
           <p class="sub" id="apSub">Three options. Same standards.</p>
