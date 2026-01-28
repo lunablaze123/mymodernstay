@@ -1,0 +1,15 @@
+{
+  "hero": {
+    "title": "Contact",
+    "subtitle": "Send a question or enquiry — we reply fast."
+  },
+  "contact": {
+    "name": "ModernStay",
+    "email": "info@mymodernstay.com",
+    "phone": "+386 40 000 000",
+    "address": "Rawai, Phuket, Thailand"
+  },
+  "form": {
+    "notice": "This form is static. To send submissions to email, use Netlify Forms (or similar)."
+  }
+}

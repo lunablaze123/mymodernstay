@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>ModernStay</title>
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css"/>
+
+</head>
+<body data-page="home" class="home">
+  <div id="nav"></div>
+  
+<section class="hero hero-full">
+  <div class="hero-bg" aria-hidden="true">
+    <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
+    <img id="heroPoster" alt="Hero" loading="eager"/>
+    <div class="shade"></div>
+  </div>
+
+  <div class="container hero-full-inner">
+    <div class="hero-full-content fade">
+      <div class="badge" id="kicker"><span class="dot"></span>Luxury Apartments</div>
+      <div class="h1" id="heroTitle">A modern stay, made simple.</div>
+      <p class="p" id="heroSub">Three curated apartments. Clean design. Direct booking.</p>
+
+      <div class="hero-full-actions">
+        <a class="btn primary" id="heroBookBtn" href="#" target="_blank" rel="noopener">BOOK NOW</a>
+        <a class="btn" id="heroTourBtn" href="#" target="_blank" rel="noopener">TAKE A 3D TOUR</a>
+        <a class="btn ghost" href="apartments.html">View apartments</a>
+      </div>
+
+      <a class="hero-underline" href="#apartments">
+        <span style="opacity:.9">Read more</span>
+        <span style="opacity:.7">▾</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="apartments">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="h2" id="apTitle">Choose your apartment</div>
+        <p class="sub" id="apSub">Three options. Same standards.</p>
+      </div>
+      <a class="btn" href="apartments.html">See all</a>
+    </div>
+    <div class="grid3" id="apartmentsGrid"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container split">
+    <div class="card fade" style="padding:18px">
+      <div class="badge"><span class="dot"></span><span id="tourTitle">3D Tour</span></div>
+      <div class="h2" style="margin-top:10px" id="tourSub">Explore the residence instantly — no redirects.</div>
+      <div class="small" style="margin-top:10px">Embed link can be changed in <code>content/settings/global.json</code></div>
+      <div style="margin-top:14px">
+        <a class="btn primary" href="residence.html">See The Residence</a>
+      </div>
+    </div>
+    <iframe class="iframe fade" id="tourFrame" title="3D Tour" loading="lazy" referrerpolicy="no-referrer"></iframe>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="h2" id="resTitle">The Residence</div>
+        <p class="sub" id="resSub">Amenities, location and the bigger picture.</p>
+      </div>
+      <a class="btn" href="residence.html">View</a>
+    </div>
+    <div class="grid3">
+      <div class="card fade" style="padding:16px"><div class="badge"><span class="dot"></span>Location</div><div class="p" style="margin-top:10px">Add quick location selling points and nearby places.</div></div>
+      <div class="card fade" style="padding:16px"><div class="badge"><span class="dot"></span>Amenities</div><div class="p" style="margin-top:10px">Pool, Wi‑Fi, cleaning, check-in, parking — your offer.</div></div>
+      <div class="card fade" style="padding:16px"><div class="badge"><span class="dot"></span>Direct Booking</div><div class="p" style="margin-top:10px">Clear terms + fast support. No clutter.</div></div>
+    </div>
+  </div>
+</section>
+
+  <div id="footer"></div>
+  <script type="module" src="assets/js/pages/home.js"></script>
+  <script type="module" src="assets/js/editor/inline-editor.js"></script>
+  <script type="module" src="assets/js/chatbot/support-bot.js"></script>
+</body>
+</html>

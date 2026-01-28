@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Admin — ModernStay</title>
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css"/>
+
+</head>
+<body data-page="admin">
+  <div id="nav"></div>
+  
+<section class="section">
+  <div class="container">
+    <div class="card fade" style="padding:18px">
+      <div class="badge"><span class="dot"></span>Admin (simple)</div>
+      <div class="h2" style="margin-top:10px">Urejanje vsebine brez kode</div>
+      <p class="sub" style="margin-top:6px">Spreminjaj predvsem <code>/content</code> in <code>/assets/media</code>. Lahko tudi odpreš strani z <code>?edit=1</code> za klik-urejanje.</p>
+      <div class="hr"></div>
+      <div class="small">
+        <div><strong>Glavne datoteke:</strong></div>
+        <ul>
+          <li><code>content/settings/global.json</code> (booking link + 3D tour embed)</li>
+          <li><code>content/pages/home.json</code> (hero + sekcije)</li>
+          <li><code>content/apartments/apartma1.json</code> (Apartma 1)</li>
+          <li><code>content/apartments/apartma2.json</code> (Apartma 2)</li>
+          <li><code>content/apartments/apartma3.json</code> (Apartma 3)</li>
+          <li><code>content/pages/policies.md</code> (Policies)</li>
+        </ul>
+        <div style="margin-top:10px"><strong>Support bot (FAQ):</strong> uredi v <code>content/bot/faq.json</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div id="footer"></div>
+  <script type="module" src="assets/js/pages/apartments.js"></script>
+  <script type="module" src="assets/js/editor/inline-editor.js"></script>
+  <script type="module" src="assets/js/chatbot/support-bot.js"></script>
+</body>
+</html>

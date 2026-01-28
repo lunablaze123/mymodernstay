@@ -1,0 +1,33 @@
+{
+  "id": "apartma2",
+  "name": "Apartma 2",
+  "teaser": "Opis apartma 2",
+  "description": "Opis apartma 2 (dolgi opis)",
+  "maxGuests": 4,
+  "beds": "1 King + sofa bed",
+  "size": "42 m²",
+  "highlights": [
+    "Fast Wi‑Fi",
+    "Air conditioning",
+    "Kitchen",
+    "Balcony"
+  ],
+  "bookingUrl": "https://beds24.com/book-calypsophuket",
+  "gallery": [
+    "assets/media/images/15.jpg",
+    "assets/media/images/16.jpg",
+    "assets/media/images/17.jpg",
+    "assets/media/images/18.jpg",
+    "assets/media/images/19.jpg",
+    "assets/media/images/20.jpg",
+    "assets/media/images/21.jpg",
+    "assets/media/images/22.jpg",
+    "assets/media/images/23.jpg",
+    "assets/media/images/24.jpg",
+    "assets/media/images/25.jpg",
+    "assets/media/images/26.jpg",
+    "assets/media/images/27.jpg",
+    "assets/media/images/28.jpg",
+    "assets/media/images/29.jpg"
+  ]
+}

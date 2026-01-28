@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "title": "The Residence",
+    "subtitle": "A curated place to stay — beyond the apartment."
+  },
+  "blocks": [
+    {
+      "title": "Pool & common areas",
+      "text": "Add your residence description here."
+    },
+    {
+      "title": "Neighborhood",
+      "text": "Add location highlights, cafes, beaches, transport."
+    },
+    {
+      "title": "What’s included",
+      "text": "Describe parking, Wi‑Fi, cleaning, rules, etc."
+    }
+  ],
+  "gallery": [
+    "assets/media/images/01.jpg",
+    "assets/media/images/01.jpg",
+    "assets/media/images/01.jpg"
+  ],
+  "tourEmbedUrl": "https://vt.photoup.net/15ET/calypso-garden-residences-rawai-mueang-phuket-district-phuket-tajska/embed"
+}
