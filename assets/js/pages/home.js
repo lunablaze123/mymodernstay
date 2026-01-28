@@ -26,17 +26,14 @@ function typeText(el, text, speed = 45) {
 }
 
 /* ---------------------------
-   One-time fade-in (for lower sections only)
+   One-time fade-in (lower sections)
 ---------------------------- */
 function mountFadeInsOnce() {
   const els = document.querySelectorAll(".fade");
   if (!els.length) return;
 
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) {
-    els.forEach(el => el.classList.add("in"));
-    return;
-  }
+  if (reduce) { els.forEach(el => el.classList.add("in")); return; }
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -74,19 +71,14 @@ function mountScrollProgress() {
     bar.style.transform = `scaleX(${p})`;
     ticking = false;
   }
-
   window.addEventListener("scroll", () => {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(update);
-    }
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
-
   update();
 }
 
 /* ---------------------------
-   Auto-highlight apartments (paused on hover)
+   Apartment highlight loop
 ---------------------------- */
 function mountApartmentHighlight() {
   const cards = document.querySelectorAll(".ap-card");
@@ -116,117 +108,123 @@ function mountLazyImages() {
 }
 
 /* ---------------------------
-   Scroll Scene (SCRUB)
-   - Hero content + nav slide/fade out
-   - Video shade dims
-   - Apartments appear one-by-one (stagger)
-   - Reverses naturally when scrolling back up
+   SCROLL SCENE (the thing you asked for)
+   - scroll down: hero/nav fade+slide up, shade dims, apartments reveal staggered
+   - scroll up: everything reverses
 ---------------------------- */
 function mountScrollScene() {
-  const hero = qs("#hero");
-  const heroContent = qs("#heroContent");
-  const shade = qs("#heroShade");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
 
-  const apartments = qs("#apartments");
-  const apHead = qs("#apHead");
-  const grid = qs("#apartmentsGrid");
-
+  // Make it work even if HTML was not perfect:
+  const hero = document.querySelector("#hero") || document.querySelector(".hero.hero-full");
+  const apartments = document.querySelector("#apartments");
+  const grid = document.querySelector("#apartmentsGrid");
   if (!hero || !apartments || !grid) return;
 
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce) return; // keep it simple for reduced motion users
+  // Ensure IDs exist (self-healing)
+  const shade = document.querySelector("#heroShade") || hero.querySelector(".shade");
+  if (shade && !shade.id) shade.id = "heroShade";
 
-  // Initial states for apartments (so they don't all show at once)
-  const initApartmentStyles = () => {
-    const cards = grid.querySelectorAll(".ap-card");
+  const heroContent = document.querySelector("#heroContent") || hero.querySelector(".hero-full-content");
+  if (heroContent && !heroContent.id) heroContent.id = "heroContent";
+
+  const apHead = document.querySelector("#apHead") || apartments.querySelector(".section-head");
+  if (apHead && !apHead.id) apHead.id = "apHead";
+
+  // Find the nav element injected by mountNav:
+  // Prefer .nav, else just animate the first element inside #nav
+  let navEl = document.querySelector(".nav");
+  if (!navEl) {
+    const navMount = document.querySelector("#nav");
+    navEl = navMount ? navMount.firstElementChild : null;
+  }
+
+  // Initial hidden state for apartments reveal (so they don't show all at once)
+  const initApartments = () => {
     if (apHead) {
       apHead.style.opacity = "0";
-      apHead.style.transform = "translate3d(0, 14px, 0)";
+      apHead.style.transform = "translate3d(0, 16px, 0)";
+      apHead.style.willChange = "transform, opacity";
     }
-    cards.forEach((c) => {
-      c.style.opacity = "0";
-      c.style.transform = "translate3d(0, 22px, 0) scale(0.985)";
+    grid.querySelectorAll(".ap-card").forEach(card => {
+      card.style.opacity = "0";
+      card.style.transform = "translate3d(0, 28px, 0) scale(0.985)";
+      card.style.willChange = "transform, opacity";
     });
   };
-
-  // Make sure nav element exists (it’s injected by mountNav)
-  let navEl = document.querySelector(".nav") || null;
 
   let ticking = false;
 
-  const update = () => {
+  function update() {
     const y = window.scrollY || 0;
     const vh = Math.max(1, window.innerHeight || 1);
 
-    // Grab nav if it appears later
-    if (!navEl) navEl = document.querySelector(".nav");
+    const apTop = apartments.offsetTop || vh;
 
-    // HERO exit progress: 0 at top, 1 near apartments
-    const heroEnd = Math.max(1, apartments.offsetTop);
-    const p = clamp01(y / (heroEnd * 0.85));
-    const pe = smoothstep(p);
+    // HERO exit progress (0 -> 1 as you scroll toward apartments)
+    // Since hero is full screen, apTop ≈ vh
+    const heroP = clamp01(y / (apTop * 0.85));
+    const heroE = smoothstep(heroP);
 
-    // Hero content slides up + fades out
+    // Hero content fades/slides UP
     if (heroContent) {
-      const op = clamp01(1 - pe * 1.15);
+      const op = clamp01(1 - heroE * 1.2);
       heroContent.style.opacity = String(op);
-      heroContent.style.transform = `translate3d(0, ${-pe * 46}px, 0)`;
-      heroContent.style.pointerEvents = (op < 0.15) ? "none" : "auto";
+      heroContent.style.transform = `translate3d(0, ${-heroE * 56}px, 0)`;
+      heroContent.style.pointerEvents = op < 0.15 ? "none" : "auto";
     }
 
-    // Nav fades/slides out as you scroll down
+    // Nav fades/slides UP
     if (navEl) {
-      const np = clamp01(y / (vh * 0.35));
-      const ne = smoothstep(np);
-      const op = clamp01(1 - ne * 0.95);
+      const navP = clamp01(y / (vh * 0.45));
+      const navE = smoothstep(navP);
+      const op = clamp01(1 - navE * 1.05);
       navEl.style.opacity = String(op);
-      navEl.style.transform = `translate3d(0, ${-ne * 18}px, 0)`;
-      navEl.style.pointerEvents = (op < 0.2) ? "none" : "auto";
+      navEl.style.transform = `translate3d(0, ${-navE * 20}px, 0)`;
+      navEl.style.pointerEvents = op < 0.2 ? "none" : "auto";
     }
 
-    // Shade dims a bit as hero exits
+    // Video shade dims a bit as hero exits
     if (shade) {
-      shade.style.opacity = String(0.65 + pe * 0.25);
+      shade.style.opacity = String(0.60 + heroE * 0.30);
     }
 
-    // Apartments reveal window (scrubbed)
-    // starts before apartments hits viewport, ends shortly after it reaches top
-    const start = apartments.offsetTop - vh * 0.70;
-    const end = apartments.offsetTop + vh * 0.12;
+    // APARTMENTS reveal progress window (starts slightly before it reaches view)
+    const start = apTop - vh * 0.65;
+    const end = apTop + vh * 0.15;
     const rp = clamp01((y - start) / Math.max(1, (end - start)));
 
-    // Head appears first
+    // Apartments heading appears first
     if (apHead) {
-      const he = smoothstep(clamp01(rp / 0.45));
-      apHead.style.opacity = String(he);
-      apHead.style.transform = `translate3d(0, ${(1 - he) * 14}px, 0)`;
+      const headT = smoothstep(clamp01(rp / 0.40));
+      apHead.style.opacity = String(headT);
+      apHead.style.transform = `translate3d(0, ${(1 - headT) * 16}px, 0)`;
     }
 
-    // Cards stagger one-by-one
+    // Apartments cards appear one-by-one (stagger), reversible
     const cards = Array.from(grid.querySelectorAll(".ap-card"));
-    const stagger = 0.14;  // time between cards
-    const dur = 0.35;      // how long each card takes to appear
+    const stagger = 0.16;  // spacing between cards
+    const dur = 0.38;      // each card animation length
 
     cards.forEach((card, i) => {
       const t = clamp01((rp - i * stagger) / dur);
-      const te = smoothstep(t);
-
-      card.style.opacity = String(te);
-      card.style.transform =
-        `translate3d(0, ${(1 - te) * 22}px, 0) scale(${0.985 + te * 0.015})`;
+      const e = smoothstep(t);
+      card.style.opacity = String(e);
+      card.style.transform = `translate3d(0, ${(1 - e) * 28}px, 0) scale(${0.985 + e * 0.015})`;
     });
 
     ticking = false;
-  };
+  }
 
-  const onScroll = () => {
+  function onScroll() {
     if (!ticking) {
       ticking = true;
       requestAnimationFrame(update);
     }
-  };
+  }
 
-  initApartmentStyles();
+  initApartments();
   update();
 
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -254,7 +252,6 @@ async function main() {
   const sub = qs("#heroSub");
 
   if (kicker) {
-    // Keep dot + set label text after it
     const label = page.hero?.kicker || "Luxury Apartments";
     kicker.innerHTML = `<span class="dot"></span>${escapeHTML(label)}`;
   }
@@ -296,6 +293,7 @@ async function main() {
   qs("#apTitle").textContent = page.sections?.apartmentsTitle || "Choose your apartment";
   qs("#apSub").textContent = page.sections?.apartmentsSubtitle || "Three options. Same standards.";
 
+  // IMPORTANT: apartments cards do NOT use .fade — they are controlled by scroll scrub
   qs("#apartmentsGrid").innerHTML = aps.map(ap => `
     <a class="card ap-card" href="apartment.html?id=${encodeURIComponent(ap.id)}">
       <div class="img">
@@ -328,8 +326,8 @@ async function main() {
   // Effects
   mountLazyImages();
   mountScrollProgress();
-  mountFadeInsOnce();     // for lower sections (.fade)
-  mountScrollScene();     // the scrubbed hero->apartments effect
+  mountFadeInsOnce();   // lower sections with .fade
+  mountScrollScene();   // hero/nav/video/apartments scrub (reversible)
   mountApartmentHighlight();
 
   await mountFooter();
