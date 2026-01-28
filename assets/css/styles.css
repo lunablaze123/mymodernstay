@@ -383,3 +383,18 @@ body.home .hero.hero-full{ margin-top: 0 !important; }
     padding-bottom: 44px; /* nice breathing room */
   }
 }
+/* FORCE the hero to be full screen on desktop */
+@media (min-width: 981px){
+  #hero{
+    height: 100vh !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  /* If your hero has this inner wrapper, force it too */
+  #hero .hero-full-inner{
+    height: 100vh !important;
+    min-height: 100vh !important;
+  }
+}
