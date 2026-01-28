@@ -8,9 +8,6 @@ import {
   toast
 } from "../app.js";
 
-/* ---------------------------
-   Helpers
----------------------------- */
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const smoothstep = (t) => t * t * (3 - 2 * t);
@@ -25,10 +22,10 @@ function typeText(el, text, speed = 45) {
   }, speed);
 }
 
-/* Lower sections fade-in once */
 function mountFadeInsOnce() {
   const els = document.querySelectorAll(".fade");
   if (!els.length) return;
+
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) { els.forEach(el => el.classList.add("in")); return; }
 
@@ -41,7 +38,6 @@ function mountFadeInsOnce() {
   els.forEach(el => io.observe(el));
 }
 
-/* Scroll progress bar */
 function mountScrollProgress() {
   const bar = document.createElement("div");
   bar.style.position = "fixed";
@@ -63,15 +59,12 @@ function mountScrollProgress() {
     bar.style.transform = `scaleX(${p})`;
     ticking = false;
   }
-
   window.addEventListener("scroll", () => {
     if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, { passive: true });
-
   update();
 }
 
-/* Auto-highlight apartments */
 function mountApartmentHighlight() {
   const cards = document.querySelectorAll(".ap-card");
   if (!cards.length) return;
@@ -96,38 +89,28 @@ function mountLazyImages() {
   document.querySelectorAll("img").forEach(img => img.loading = "lazy");
 }
 
-/* ---------------------------
-   Scroll Scene:
-   - hero text moves up + fades
-   - nav moves up + fades
-   - hero VIDEO/background moves up + slightly fades/dims (so it doesn't "stick")
-   - apartments reveal later, one-by-one
-   - reverse automatically on scroll up
----------------------------- */
-function mountScrollScene() {
+/* ✅ Pinned Stage Scroll Scene */
+function mountPinnedStageScene() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) return;
 
-  const hero = qs("#hero");
+  const stage = qs("#heroStage");
   const heroContent = qs("#heroContent");
-  const heroBg = qs("#heroBg");
   const shade = qs("#heroShade");
-
-  const apartments = qs("#apartments");
-  const apHead = qs("#apHead");
   const grid = qs("#apartmentsGrid");
+  const apHead = qs("#apHead");
 
-  if (!hero || !apartments || !grid) return;
+  if (!stage || !heroContent || !grid) return;
 
-  // Nav element (mountNav injects)
+  // nav injected by mountNav
   let navEl = document.querySelector(".nav");
   if (!navEl) {
     const navMount = document.querySelector("#nav");
     navEl = navMount ? navMount.firstElementChild : null;
   }
 
-  // init apartments hidden (so they appear one-by-one)
-  function initApartments() {
+  // hide apartments initially
+  function init() {
     if (apHead) {
       apHead.style.opacity = "0";
       apHead.style.transform = "translate3d(0, 16px, 0)";
@@ -141,76 +124,59 @@ function mountScrollScene() {
   let ticking = false;
 
   function update() {
-    const y = window.scrollY || 0;
-    const vh = Math.max(1, window.innerHeight || 1);
-    const apTop = apartments.offsetTop || vh;
+    const rect = stage.getBoundingClientRect();
+    const vh = Math.max(1, window.innerHeight);
 
-    // HERO progress based on hero height (feels natural)
-    // 0 at top, 1 when you reach the end of hero (near apartments)
-    const heroP = clamp01(y / (vh * 0.95));
-    const heroE = smoothstep(heroP);
+    // progress through stage: 0 at top, 1 at bottom
+    const total = stage.offsetHeight - vh;
+    const scrolled = clamp01((-rect.top) / Math.max(1, total));
+    const p = smoothstep(scrolled);
 
-    // 1) Hero text (scrubbed)
-    if (heroContent) {
-      const op = clamp01(1 - heroE * 1.1);
-      heroContent.style.opacity = String(op);
-      heroContent.style.transform = `translate3d(0, ${-heroE * 60}px, 0)`;
-      heroContent.style.pointerEvents = op < 0.15 ? "none" : "auto";
-    }
+    // Phase split:
+    // 0 -> 0.45 : hero text fades/slides out
+    // 0.45 -> 1 : apartments appear on video
+    const phase1End = 0.45;
 
-    // 2) Nav fades/slides up early
+    // HERO TEXT OUT
+    const heroT = clamp01(p / phase1End);
+    const heroE = smoothstep(heroT);
+
+    heroContent.style.opacity = String(1 - heroE);
+    heroContent.style.transform = `translate3d(0, ${-heroE * 60}px, 0)`;
+    heroContent.style.pointerEvents = heroE > 0.85 ? "none" : "auto";
+
+    // NAV fades a bit too (optional)
     if (navEl) {
-      const navP = clamp01(y / (vh * 0.45));
-      const navE = smoothstep(navP);
-      const op = clamp01(1 - navE * 1.05);
+      const navE = smoothstep(clamp01(p / 0.30));
+      const op = clamp01(1 - navE * 0.9);
       navEl.style.opacity = String(op);
-      navEl.style.transform = `translate3d(0, ${-navE * 20}px, 0)`;
-      navEl.style.pointerEvents = op < 0.2 ? "none" : "auto";
+      navEl.style.transform = `translate3d(0, ${-navE * 14}px, 0)`;
     }
 
-    // 3) HERO BACKGROUND (THIS IS THE FIX YOU ASKED FOR)
-    // Make the video move up too, and fade/dim a bit, so it doesn't feel "stuck".
-    if (heroBg) {
-      // Move up more than the text (gives a "leaving" feel)
-      const move = -heroE * (vh * 0.35);
-      // Fade a little near the end
-      const bgFade = smoothstep(clamp01((heroP - 0.55) / 0.45)); // starts later
-      const opacity = 1 - bgFade * 0.35; // don't fully disappear, just soften
-      heroBg.style.transform = `translate3d(0, ${move}px, 0)`;
-      heroBg.style.opacity = String(opacity);
-      // small brightness drop at end for a cinematic transition
-      heroBg.style.filter = `brightness(${1 - bgFade * 0.15})`;
-    }
-
-    // Shade also darkens slightly
+    // SHADE dims slightly while transitioning
     if (shade) {
-      shade.style.opacity = String(0.62 + heroE * 0.28);
+      shade.style.opacity = String(0.65 + heroE * 0.18);
     }
 
-    // 4) Apartments reveal LATER (so it’s not “on the video”)
-    // start when apartments are basically coming into view
-    const start = apTop - vh * 0.10;
-    const end = apTop + vh * 0.55;
-    const rp = clamp01((y - start) / Math.max(1, (end - start)));
+    // APARTMENTS IN (stagger)
+    const revealP = clamp01((p - phase1End) / (1 - phase1End));
+    const r = smoothstep(revealP);
 
-    // heading first
     if (apHead) {
-      const headT = smoothstep(clamp01(rp / 0.25));
-      apHead.style.opacity = String(headT);
-      apHead.style.transform = `translate3d(0, ${(1 - headT) * 16}px, 0)`;
+      const headE = smoothstep(clamp01(r / 0.25));
+      apHead.style.opacity = String(headE);
+      apHead.style.transform = `translate3d(0, ${(1 - headE) * 16}px, 0)`;
     }
 
-    // cards stagger one-by-one
     const cards = Array.from(grid.querySelectorAll(".ap-card"));
     const stagger = 0.18;
-    const dur = 0.40;
+    const dur = 0.42;
 
     cards.forEach((card, i) => {
-      const t = clamp01((rp - i * stagger) / dur);
+      const t = clamp01((r - i * stagger) / dur);
       const e = smoothstep(t);
       card.style.opacity = String(e);
-      card.style.transform =
-        `translate3d(0, ${(1 - e) * 28}px, 0) scale(${0.985 + e * 0.015})`;
+      card.style.transform = `translate3d(0, ${(1 - e) * 28}px, 0) scale(${0.985 + e * 0.015})`;
     });
 
     ticking = false;
@@ -223,16 +189,13 @@ function mountScrollScene() {
     }
   }
 
-  initApartments();
+  init();
   update();
 
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
 }
 
-/* ---------------------------
-   MAIN
----------------------------- */
 async function main() {
   applyTheme(await getJSON("content/settings/theme.json"));
   await mountNav("index.html");
@@ -241,11 +204,9 @@ async function main() {
   const page = await getJSON("content/pages/home.json");
   const idx = await getJSON("content/apartments/index.json");
 
-  const aps = await Promise.all(
-    (idx.list || []).map(id => getJSON(`content/apartments/${id}.json`))
-  );
+  const aps = await Promise.all((idx.list || []).map(id => getJSON(`content/apartments/${id}.json`)));
 
-  // HERO text
+  // HERO
   const kicker = qs("#kicker");
   const title = qs("#heroTitle");
   const sub = qs("#heroSub");
@@ -257,7 +218,7 @@ async function main() {
   if (title) typeText(title, page.hero?.title || "A modern stay, made simple.", 55);
   if (sub) { await sleep(450); sub.textContent = page.hero?.subtitle || "Three curated apartments. Clean design. Direct booking."; }
 
-  // HERO media
+  // VIDEO
   const video = qs("#heroVideo");
   const poster = qs("#heroPoster");
   const videoUrl = page.hero?.video || "";
@@ -287,22 +248,17 @@ async function main() {
     tourBtn.addEventListener("click", () => toast("Opening 3D tour…"));
   }
 
-  // Apartments section
+  // Apartments
   qs("#apTitle").textContent = page.sections?.apartmentsTitle || "Choose your apartment";
   qs("#apSub").textContent = page.sections?.apartmentsSubtitle || "Three options. Same standards.";
 
   qs("#apartmentsGrid").innerHTML = aps.map(ap => `
     <a class="card ap-card" href="apartment.html?id=${encodeURIComponent(ap.id)}">
       <div class="img">
-        <img src="${ap.gallery?.[0] || "assets/media/images/01.jpg"}"
-             alt="${escapeHTML(ap.name || "Apartment")}">
+        <img src="${ap.gallery?.[0] || "assets/media/images/01.jpg"}" alt="${escapeHTML(ap.name || "Apartment")}">
       </div>
       <div class="body">
-        <div class="badge">
-          <span class="dot"></span>
-          ${escapeHTML(ap.size || "")}
-          ${ap.maxGuests ? " • " + ap.maxGuests + " guests" : ""}
-        </div>
+        <div class="badge"><span class="dot"></span>${escapeHTML(ap.size || "")}${ap.maxGuests ? " • " + ap.maxGuests + " guests" : ""}</div>
         <div class="name">${escapeHTML(ap.name || "")}</div>
         <p class="teaser">${escapeHTML(ap.teaser || "")}</p>
         <div class="pills">
@@ -312,7 +268,7 @@ async function main() {
     </a>
   `).join("");
 
-  // Tour/residence
+  // Lower sections
   qs("#tourTitle").textContent = page.sections?.tourTitle || "3D Tour";
   qs("#tourSub").textContent = page.sections?.tourSubtitle || "Explore the residence instantly — no redirects.";
   qs("#tourFrame").src = g.tourEmbedUrl || "";
@@ -320,11 +276,10 @@ async function main() {
   qs("#resTitle").textContent = page.sections?.residenceTitle || "The Residence";
   qs("#resSub").textContent = page.sections?.residenceSubtitle || "Amenities, location and the bigger picture.";
 
-  // Effects
   mountLazyImages();
   mountScrollProgress();
+  mountPinnedStageScene();   // ✅ this is the pinned-video effect you asked for
   mountFadeInsOnce();
-  mountScrollScene();
   mountApartmentHighlight();
 
   await mountFooter();
