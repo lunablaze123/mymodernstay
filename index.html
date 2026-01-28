@@ -15,22 +15,22 @@
 <body data-page="home" class="home">
   <div id="nav"></div>
 
-  <!-- PINNED SCENE (video stays, content changes) -->
+  <!-- PINNED SCENE -->
   <section id="heroStage" class="stage">
-    <!-- Fixed background video for the whole scene -->
-    <div class="stage-bg" aria-hidden="true">
+    <!-- TRUE FIXED background (never moves) -->
+    <div class="stage-bg" id="stageBg" aria-hidden="true">
       <video id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
       <img id="heroPoster" alt="Hero" loading="eager"/>
       <div class="shade" id="heroShade"></div>
     </div>
 
-    <!-- Scene content -->
+    <!-- Content that scrolls over fixed video -->
     <div class="stage-inner">
       <div class="container">
-        <!-- HERO TEXT (goes away first) -->
+
+        <!-- HERO TEXT -->
         <div class="hero-full-content" id="heroContent">
           <div class="badge" id="kicker"><span class="dot"></span>Luxury Apartments</div>
-
           <div class="h1" id="heroTitle">A modern stay, made simple.</div>
           <p class="p" id="heroSub">Three curated apartments. Clean design. Direct booking.</p>
 
@@ -46,7 +46,7 @@
           </a>
         </div>
 
-        <!-- APARTMENTS ON VIDEO (appear after hero text goes away) -->
+        <!-- APARTMENTS ON VIDEO -->
         <div id="apartmentsInline" class="apartments-inline">
           <div class="section-head" id="apHead">
             <div>
@@ -58,11 +58,12 @@
 
           <div class="grid3" id="apartmentsGrid"></div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- REST OF PAGE CONTINUES NORMALLY -->
+  <!-- REST OF SITE (normal background) -->
   <section class="section">
     <div class="container split">
       <div class="card fade" style="padding:18px">
@@ -93,12 +94,10 @@
           <div class="badge"><span class="dot"></span>Location</div>
           <div class="p" style="margin-top:10px">Add quick location selling points and nearby places.</div>
         </div>
-
         <div class="card fade" style="padding:16px">
           <div class="badge"><span class="dot"></span>Amenities</div>
           <div class="p" style="margin-top:10px">Pool, Wi-Fi, cleaning, check-in, parking — your offer.</div>
         </div>
-
         <div class="card fade" style="padding:16px">
           <div class="badge"><span class="dot"></span>Direct Booking</div>
           <div class="p" style="margin-top:10px">Clear terms + fast support. No clutter.</div>
