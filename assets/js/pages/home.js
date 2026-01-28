@@ -38,33 +38,6 @@ function mountFadeInsOnce() {
   els.forEach(el => io.observe(el));
 }
 
-function mountScrollProgress() {
-  const bar = document.createElement("div");
-  bar.style.position = "fixed";
-  bar.style.top = "0";
-  bar.style.left = "0";
-  bar.style.height = "3px";
-  bar.style.background = "var(--accent, #7C5CFF)";
-  bar.style.zIndex = "9999";
-  bar.style.width = "100%";
-  bar.style.transformOrigin = "0 50%";
-  bar.style.transform = "scaleX(0)";
-  document.body.appendChild(bar);
-
-  let ticking = false;
-  function update() {
-    const h = document.documentElement;
-    const max = h.scrollHeight - h.clientHeight;
-    const p = max > 0 ? (h.scrollTop / max) : 0;
-    bar.style.transform = `scaleX(${p})`;
-    ticking = false;
-  }
-  window.addEventListener("scroll", () => {
-    if (!ticking) { ticking = true; requestAnimationFrame(update); }
-  }, { passive: true });
-  update();
-}
-
 function mountApartmentHighlight() {
   const cards = document.querySelectorAll(".ap-card");
   if (!cards.length) return;
@@ -89,18 +62,19 @@ function mountLazyImages() {
   document.querySelectorAll("img").forEach(img => img.loading = "lazy");
 }
 
-/* ✅ Pinned Stage Scroll Scene */
+/* ✅ EXACT behavior: video stays FIXED, only content changes */
 function mountPinnedStageScene() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) return;
 
   const stage = qs("#heroStage");
-  const heroContent = qs("#heroContent");
+  const stageBg = qs("#stageBg");
   const shade = qs("#heroShade");
-  const grid = qs("#apartmentsGrid");
+  const heroContent = qs("#heroContent");
   const apHead = qs("#apHead");
+  const grid = qs("#apartmentsGrid");
 
-  if (!stage || !heroContent || !grid) return;
+  if (!stage || !stageBg || !heroContent || !grid) return;
 
   // nav injected by mountNav
   let navEl = document.querySelector(".nav");
@@ -109,15 +83,15 @@ function mountPinnedStageScene() {
     navEl = navMount ? navMount.firstElementChild : null;
   }
 
-  // hide apartments initially
+  // init apartments hidden
   function init() {
     if (apHead) {
       apHead.style.opacity = "0";
-      apHead.style.transform = "translate3d(0, 16px, 0)";
+      apHead.style.transform = "translate3d(0,16px,0)";
     }
     grid.querySelectorAll(".ap-card").forEach(card => {
       card.style.opacity = "0";
-      card.style.transform = "translate3d(0, 28px, 0) scale(0.985)";
+      card.style.transform = "translate3d(0,28px,0) scale(0.985)";
     });
   }
 
@@ -126,34 +100,42 @@ function mountPinnedStageScene() {
   function update() {
     const rect = stage.getBoundingClientRect();
     const vh = Math.max(1, window.innerHeight);
+    const total = Math.max(1, stage.offsetHeight - vh);
 
-    // progress through stage: 0 at top, 1 at bottom
-    const total = stage.offsetHeight - vh;
-    const scrolled = clamp01((-rect.top) / Math.max(1, total));
-    const p = smoothstep(scrolled);
+    // stage progress 0..1
+    const raw = (-rect.top) / total;
+    const inside = raw >= 0 && raw <= 1;
 
-    // Phase split:
-    // 0 -> 0.45 : hero text fades/slides out
-    // 0.45 -> 1 : apartments appear on video
+    // Turn fixed background ON only while inside stage
+    stageBg.style.opacity = inside ? "1" : "0";
+
+    if (!inside) {
+      // reset nav when outside
+      if (navEl) { navEl.style.opacity = "1"; navEl.style.transform = "translate3d(0,0,0)"; }
+      ticking = false;
+      return;
+    }
+
+    const p = smoothstep(clamp01(raw));
+
+    // Phase split: hero disappears first, then apartments appear on same video
     const phase1End = 0.45;
 
     // HERO TEXT OUT
     const heroT = clamp01(p / phase1End);
     const heroE = smoothstep(heroT);
-
     heroContent.style.opacity = String(1 - heroE);
     heroContent.style.transform = `translate3d(0, ${-heroE * 60}px, 0)`;
     heroContent.style.pointerEvents = heroE > 0.85 ? "none" : "auto";
 
-    // NAV fades a bit too (optional)
+    // NAV fades a bit (optional)
     if (navEl) {
       const navE = smoothstep(clamp01(p / 0.30));
-      const op = clamp01(1 - navE * 0.9);
-      navEl.style.opacity = String(op);
+      navEl.style.opacity = String(1 - navE * 0.9);
       navEl.style.transform = `translate3d(0, ${-navE * 14}px, 0)`;
     }
 
-    // SHADE dims slightly while transitioning
+    // Shade dims slightly
     if (shade) {
       shade.style.opacity = String(0.65 + heroE * 0.18);
     }
@@ -206,7 +188,7 @@ async function main() {
 
   const aps = await Promise.all((idx.list || []).map(id => getJSON(`content/apartments/${id}.json`)));
 
-  // HERO
+  // HERO text
   const kicker = qs("#kicker");
   const title = qs("#heroTitle");
   const sub = qs("#heroSub");
@@ -248,7 +230,7 @@ async function main() {
     tourBtn.addEventListener("click", () => toast("Opening 3D tour…"));
   }
 
-  // Apartments
+  // Apartments content
   qs("#apTitle").textContent = page.sections?.apartmentsTitle || "Choose your apartment";
   qs("#apSub").textContent = page.sections?.apartmentsSubtitle || "Three options. Same standards.";
 
@@ -277,8 +259,7 @@ async function main() {
   qs("#resSub").textContent = page.sections?.residenceSubtitle || "Amenities, location and the bigger picture.";
 
   mountLazyImages();
-  mountScrollProgress();
-  mountPinnedStageScene();   // ✅ this is the pinned-video effect you asked for
+  mountPinnedStageScene();  // ✅ fixed video stays, only text/cards change
   mountFadeInsOnce();
   mountApartmentHighlight();
 
