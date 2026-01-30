@@ -56,6 +56,26 @@
     // 1) INLINE iframe inside the right card (always visible)
     const inline = qs('#inlineBeds24Frame');
     if (inline){
+      const loader = qs('#inlineLoader');
+      if (loader) loader.classList.remove('hidden');
+
+      // Hide loader when the iframe finishes loading
+      inline.addEventListener('load', () => {
+        if (loader) loader.classList.add('hidden');
+      }, { once: false });
+
+      // Fallback: if it takes long, keep loader but update text (no blocking)
+      if (loader){
+        const t1 = setTimeout(() => {
+          const txt = loader.querySelector('.loader-text');
+          const sub = loader.querySelector('.loader-sub');
+          if (txt) txt.textContent = 'Still loading…';
+          if (sub) sub.textContent = 'If it feels slow, tap “Open Fullscreen” for a bigger view.';
+        }, 8000);
+        // If load happens, clear timer next tick
+        inline.addEventListener('load', () => { clearTimeout(t1); }, { once: true });
+      }
+
       inline.src = buildBeds24Url(base, cssUrl, null, null, adultsDefault);
     }
 
@@ -81,6 +101,15 @@
 
       const iframe = qs('#beds24Frame');
       if (iframe){
+        const sub = qs('#bookingSub');
+        if (sub) sub.textContent = 'Loading secure booking…';
+        iframe.addEventListener('load', () => {
+          const s = qs('#bookingSub');
+          if (s && s.textContent === 'Loading secure booking…') {
+            s.textContent = 'Choose dates & quantity inside the secure booking window.';
+          }
+        }, { once: true });
+
         iframe.src = buildBeds24Url(base, cssUrl, checkin, nights, aVal);
       }
 

@@ -10,6 +10,8 @@
   <meta property="og:description" content="">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://beds24.com">
+  <link rel="dns-prefetch" href="//beds24.com">
 </head>
 <body>
 
@@ -57,7 +59,12 @@
 
   <!-- INLINE booking preview (Beds24 inside the box) -->
   <div class="inline-booking">
-    <iframe
+    <div class="inline-loader" id="inlineLoader" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  <div class="loader-text">Loading secure booking…</div>
+  <div class="loader-sub">This can take a few seconds on first load.</div>
+</div>
+<iframe
       id="inlineBeds24Frame"
       title="Beds24 Booking Inline"
       allow="payment *; fullscreen *"

@@ -136,3 +136,53 @@ section{padding:54px 0}
 @media(max-width: 560px){
   .inline-booking{ height: 520px; }  /* more space on mobile */
 }
+
+/* Inline booking loader overlay */
+.inline-booking{
+  position: relative;
+}
+
+.inline-loader{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  background: rgba(11,12,16,.62);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  transition: opacity .22s ease;
+}
+
+.inline-loader.hidden{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.inline-loader .spinner{
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 3px solid rgba(255,255,255,.18);
+  border-top-color: rgba(255,255,255,.75);
+  animation: mmsSpin 1s linear infinite;
+}
+
+.inline-loader .loader-text{
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.inline-loader .loader-sub{
+  font-size: 12px;
+  opacity: .78;
+  text-align: center;
+  max-width: 280px;
+}
+
+@keyframes mmsSpin{
+  to{ transform: rotate(360deg); }
+}
