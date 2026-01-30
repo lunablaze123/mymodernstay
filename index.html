@@ -50,42 +50,33 @@
         </div>
 
         <aside class="avail-card" id="book">
-          <div class="avail-head">
-            <h3>Check Availability</h3>
-            <span class="badge">No redirect • Secure booking</span>
-          </div>
+  <div class="avail-head">
+    <h3>Book Direct</h3>
+    <span class="badge">No redirect • Secure booking</span>
+  </div>
 
-          <div class="avail-form">
-            <div class="field">
-              <label for="checkin">Check-in</label>
-              <input id="checkin" type="date" placeholder="Arrival">
-            </div>
-            <div class="field">
-              <label for="checkout">Check-out</label>
-              <input id="checkout" type="date" placeholder="Departure">
-            </div>
-            <div class="field">
-              <label for="adults">Guests</label>
-              <select id="adults">
-                <option value="1">1 Guest</option>
-                <option value="2" selected>2 Guests</option>
-                <option value="3">3 Guests</option>
-                <option value="4">4 Guests</option>
-              </select>
-            </div>
-          </div>
+  <!-- INLINE booking preview (Beds24 inside the box) -->
+  <div class="inline-booking">
+    <iframe
+      id="inlineBeds24Frame"
+      title="Beds24 Booking Inline"
+      allow="payment *; fullscreen *"
+      referrerpolicy="no-referrer-when-downgrade"
+      loading="lazy"
+    ></iframe>
+  </div>
 
-          <div class="avail-foot">
-            <button class="btn primary" data-open-booking>Check Availability</button>
-            <span class="smallnote">You’ll finish the booking inside the embedded secure window.</span>
-          </div>
+  <div class="avail-foot" style="margin-top:12px">
+    <button class="btn primary" data-open-booking>Open Fullscreen</button>
+    <span class="smallnote">Use fullscreen if you want a bigger view.</span>
+  </div>
 
-          <div class="hr"></div>
+  <div class="hr"></div>
 
-          <div class="smallnote">
-            <strong>Important fees:</strong> Electricity THB 7/unit at check-out, deposit THB 10,000 at check-in.
-          </div>
-        </aside>
+  <div class="smallnote">
+    <strong>Important fees:</strong> Electricity THB 7/unit at check-out, deposit THB 10,000 at check-in.
+  </div>
+</aside>
       </div>
     </div>
   </section>

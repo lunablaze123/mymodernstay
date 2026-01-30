@@ -2,7 +2,6 @@
   const qs = (s) => document.querySelector(s);
 
   function daysBetween(a, b) {
-    // a,b are Date objects at midnight
     const ms = b.getTime() - a.getTime();
     return Math.max(1, Math.round(ms / 86400000));
   }
@@ -14,7 +13,6 @@
   }
 
   function iso(d){
-    // YYYY-MM-DD
     const y = d.getFullYear();
     const m = String(d.getMonth()+1).padStart(2,'0');
     const day = String(d.getDate()).padStart(2,'0');
@@ -23,22 +21,30 @@
 
   function buildBeds24Url(base, cssUrl, checkin, nights, adults){
     const u = new URL(base);
-    // Beds24 supports checkin + numnight + numadult parameters (see Beds24 developer docs)
+
+    // Beds24 parameters (best-effort; varies by booking setup)
     if (checkin) u.searchParams.set('checkin', checkin);
     if (nights)  u.searchParams.set('numnight', String(nights));
     if (adults)  u.searchParams.set('numadult', String(adults));
+
+    // External CSS skin (must be HTTPS)
     if (cssUrl)  u.searchParams.set('cssfile', cssUrl);
-    // Force english as requested
+
+    // Force english
     u.searchParams.set('lang', 'en');
     return u.toString();
   }
 
   function openModal(){
-    qs('#bookingModal').classList.add('open');
+    const m = qs('#bookingModal');
+    if (!m) return;
+    m.classList.add('open');
     document.body.style.overflow='hidden';
   }
   function closeModal(){
-    qs('#bookingModal').classList.remove('open');
+    const m = qs('#bookingModal');
+    if (!m) return;
+    m.classList.remove('open');
     document.body.style.overflow='';
   }
 
@@ -47,10 +53,16 @@
     const cssUrl = content.booking?.beds24_css_url || '';
     const adultsDefault = content.booking?.default_adults || 2;
 
-    // Bind buttons
+    // 1) INLINE iframe inside the right card (always visible)
+    const inline = qs('#inlineBeds24Frame');
+    if (inline){
+      inline.src = buildBeds24Url(base, cssUrl, null, null, adultsDefault);
+    }
+
+    // 2) Fullscreen modal (for bigger view)
     const openers = document.querySelectorAll('[data-open-booking]');
     openers.forEach(btn => btn.addEventListener('click', () => {
-      // Read form values if present
+      // Optional: if date inputs exist on a page, use them; otherwise open without prefills.
       const inVal  = qs('#checkin')?.value || '';
       const outVal = qs('#checkout')?.value || '';
       const aVal   = Number(qs('#adults')?.value || adultsDefault);
@@ -68,16 +80,15 @@
       }
 
       const iframe = qs('#beds24Frame');
-      iframe.src = buildBeds24Url(base, cssUrl, checkin, nights, aVal);
+      if (iframe){
+        iframe.src = buildBeds24Url(base, cssUrl, checkin, nights, aVal);
+      }
 
-      // Update modal header
       const sub = qs('#bookingSub');
       if (sub) {
-        if (checkin && nights) {
-          sub.textContent = `Pre-selected: ${checkin} for ${nights} night(s), ${aVal} guest(s). (If not prefilled, choose dates inside.)`;
-        } else {
-          sub.textContent = `Choose dates & quantity inside the secure booking window.`;
-        }
+        sub.textContent = (checkin && nights)
+          ? `Pre-selected: ${checkin} for ${nights} night(s), ${aVal} guest(s). (If not prefilled, choose dates inside.)`
+          : `Choose dates & quantity inside the secure booking window.`;
       }
 
       openModal();
@@ -85,13 +96,7 @@
 
     qs('[data-close-booking]')?.addEventListener('click', closeModal);
     qs('#bookingModal')?.addEventListener('click', (e) => { if (e.target?.id === 'bookingModal') closeModal(); });
-
-    // ESC close
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-    // Prefill defaults
-    const adultsSel = qs('#adults');
-    if (adultsSel && !adultsSel.value) adultsSel.value = String(adultsDefault);
   }
 
   window.MMS_initBooking = initBooking;
