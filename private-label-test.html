@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Private Label Test — MyModernStay</title>
+  <meta name="description" content="Test Beds24 Private Label (booking on your domain) and verify your website config.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo"><div class="mark"></div><span data-site-name>MyModernStay</span></div>
+    <nav class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="private-label-test.html" style="color:var(--text);background:rgba(255,255,255,.06)">Private Label Test</a>
+    </nav>
+    <div class="navcta">
+      <a class="btn" href="index.html#book">Back to Booking</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="container">
+      <h2 class="section-title">Private Label Test (Beds24)</h2>
+      <p class="section-sub">This page is for you (the owner) to verify that booking can run on your own subdomain (Private Label) and that the website config is correct.</p>
+
+      <div class="split">
+        <div class="card">
+          <h3 style="margin:0 0 10px">Your current config</h3>
+          <div id="plStatus" class="badge">Loading…</div>
+          <div class="hr"></div>
+          <div class="facts" id="plFacts"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn primary" id="openSelected" type="button">Open booking (selected)</button>
+            <button class="btn" id="openBase" type="button">Open booking (Beds24 base)</button>
+            <button class="btn" id="openPL" type="button">Open booking (Private Label)</button>
+          </div>
+
+          <p style="margin:12px 0 0;color:var(--muted);font-size:13px">
+            Tip: to use Private Label on the live site, set <span class="kbd">use_private_label: true</span> in <span class="kbd">assets/data/content.json</span>.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 10px">Quick test checklist</h3>
+          <p style="margin:0 0 10px;color:var(--muted)">Do this in order:</p>
+          <ol style="margin:0 0 0 18px;color:var(--muted)">
+            <li>Create a subdomain like <span class="kbd">book.YOURDOMAIN.com</span> in your DNS (CNAME).</li>
+            <li>In Beds24, enable <span class="kbd">Private Label</span> and paste that subdomain.</li>
+            <li>After Beds24 shows it as active, set <span class="kbd">beds24_private_label_url</span> to <span class="kbd">https://book.YOURDOMAIN.com/book-calypsophuket</span>.</li>
+            <li>Set <span class="kbd">beds24_css_url</span> to your live CSS file (e.g. <span class="kbd">https://YOURDOMAIN.com/beds24.css</span>).</li>
+            <li>Turn on <span class="kbd">use_private_label: true</span> and re-deploy.</li>
+          </ol>
+          <div class="hr"></div>
+          <p style="margin:0;color:var(--muted);font-size:13px">
+            If the booking page URL in the browser stays on your subdomain the entire time, you’re good.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="logo" style="margin-bottom:8px"><div class="mark"></div><span data-site-name>MyModernStay</span></div>
+      <small>This page is for setup/testing only.</small>
+    </div>
+    <div>
+      <strong style="display:block;margin-bottom:8px">Links</strong>
+      <a href="index.html">Home</a><br>
+      <a href="index.html#book">Booking</a>
+    </div>
+    <div>
+      <strong style="display:block;margin-bottom:8px">Files</strong>
+      <small class="kbd">assets/data/content.json</small><br>
+      <small class="kbd">beds24.css</small>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/private-label-test.js"></script>
+</body>
+</html>

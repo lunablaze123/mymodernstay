@@ -38,3 +38,18 @@ input, select, textarea {
 h1, h2, h3, h4 {
   letter-spacing: -0.2px !important;
 }
+
+/* Optional: "minimal" embedded mode (useful when you pass dates from your own calendar)
+   These class names are from Beds24's Custom CSS examples.
+*/
+.b24-selector-checkin,
+.b24-selector-checkout,
+.b24-selector-numnight{
+  display: none !important;
+}
+
+/* Optional: hide the "Up" button at the bottom */
+footer .button{display:none !important;}
+
+/* Optional: if using a multi-property page, hide property names */
+.at_propnametext{display:none !important;}
