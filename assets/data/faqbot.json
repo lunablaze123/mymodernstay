@@ -1,0 +1,128 @@
+{
+  "botName": "Support",
+  "welcome": "Hi! 👋 How can I help you?",
+  "fallback": "I don’t have that in my knowledge base yet. Try a shorter query (e.g. booking, check-in, parking, pets, 3D tour) or email us at {email}.",
+  "quickReplies": [
+    "How do I book?",
+    "Check-in / check-out",
+    "Prices & availability",
+    "3D tour",
+    "Contact"
+  ],
+  "items": [
+    {
+      "q": [
+        "rezervacija",
+        "reservation",
+        "book now",
+        "book",
+        "booking",
+        "kako bookam",
+        "rezerviraj",
+        "kako rezerviram",
+        "reserve",
+        "how do i book"
+      ],
+      "a": "You can book via our secure booking page here: {bookingUrl}."
+    },
+    {
+      "q": [
+        "check in",
+        "departure time",
+        "check-out",
+        "check-in",
+        "check out",
+        "odhod",
+        "ura odhoda",
+        "ura prihoda",
+        "prihod",
+        "arrival time"
+      ],
+      "a": "Standard times: check-in from {checkinTime}, check-out by {checkoutTime}."
+    },
+    {
+      "q": [
+        "prices",
+        "rate",
+        "kolikšna je cena",
+        "cena",
+        "koliko stane",
+        "how much",
+        "price",
+        "tarifa"
+      ],
+      "a": "Prices and availability are always most accurate in the booking system: {bookingUrl}."
+    },
+    {
+      "q": [
+        "360 tour",
+        "3d tour",
+        "ogled",
+        "360",
+        "virtual tour"
+      ],
+      "a": "Open the 3D tour here (it’s also embedded on the site): {tourEmbedUrl}."
+    },
+    {
+      "q": [
+        "phone",
+        "call",
+        "kontakt",
+        "email",
+        "contact",
+        "telefon"
+      ],
+      "a": "Contact: {email} • {phone}."
+    },
+    {
+      "q": [
+        "address",
+        "map",
+        "kje se nahaja",
+        "where are you",
+        "kako do lokacije",
+        "kje ste",
+        "location",
+        "lokacija"
+      ],
+      "a": "Location: {address}."
+    },
+    {
+      "q": [
+        "parking",
+        "parkiranje",
+        "parkirišče"
+      ],
+      "a": "Parking is available on site."
+    },
+    {
+      "q": [
+        "pets",
+        "pes",
+        "hišni ljubljenčki",
+        "pet policy",
+        "mačka"
+      ],
+      "a": "Pets are not allowed."
+    },
+    {
+      "q": [
+        "cigaret",
+        "kajenje",
+        "smoking"
+      ],
+      "a": "Smoking is not allowed inside the apartment."
+    },
+    {
+      "q": [
+        "povračilo",
+        "cancellation",
+        "cancellation policy",
+        "odpoved",
+        "storno",
+        "refund"
+      ],
+      "a": "Cancellation terms are shown during booking. Please review the booking flow for current policies."
+    }
+  ]
+}
