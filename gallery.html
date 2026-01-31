@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery — MyModernStay</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta property="og:title" content="Gallery — MyModernStay">
+  <meta property="og:description" content="">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo"><div class="mark"></div><span data-site-name>MyModernStay</span></div>
+    <nav class="navlinks">
+      <a href="index.html" >Home</a>
+      <a href="gallery.html" style="color:var(--text);background:rgba(255,255,255,.06)">Gallery</a>
+      <a href="rules.html" >House Rules</a>
+      <a href="faq.html" >FAQ</a>
+    </nav>
+    <div class="navcta">
+      <a class="btn ghost" data-wa-link href="#" rel="noopener">WhatsApp</a>
+      <button class="btn primary" data-open-booking>Book Now</button>
+    </div>
+  </div>
+</header>
+
+
+<main>
+  <section>
+    <div class="container">
+      <h1 class="section-title">Gallery</h1>
+      <p class="section-sub">One set of images — the units are identical inside.</p>
+      <div class="gallery-video">
+        <video id="galleryVideo" autoplay muted loop playsinline></video>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn primary" data-open-booking>Check Availability</button>
+        <a class="btn" href="index.html">Back to Home</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="logo" style="margin-bottom:8px"><div class="mark"></div><span data-site-name>MyModernStay</span></div>
+      <small>Modern stay in Rawai, Phuket. Book 1–3 identical units (subject to availability).</small>
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="badge" data-wa-link href="#">WhatsApp</a>
+        <span class="badge">Email: <span data-email>CHANGE_ME@example.com</span></span>
+      </div>
+      <div class="hr"></div>
+      <small>Policies & fees shown here are based on current listing information. Final terms are confirmed during booking.</small>
+    </div>
+    <div>
+      <strong style="display:block;margin-bottom:8px">Pages</strong>
+      <a href="index.html">Home</a><br>
+      <a href="gallery.html">Gallery</a><br>
+      <a href="rules.html">House Rules</a><br>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div>
+      <strong style="display:block;margin-bottom:8px">Booking</strong>
+      <a href="index.html#book" data-open-booking>Check Availability</a><br>
+      <small class="kbd">Powered by Beds24 (embedded)</small>
+    </div>
+  </div>
+</footer>
+
+<!-- Booking Modal -->
+<div class="modal" id="bookingModal" aria-hidden="true">
+  <div class="modal-inner" role="dialog" aria-modal="true" aria-label="Booking">
+    <div class="modal-top">
+      <div class="left">
+        <div class="title">Secure Booking</div>
+        <div class="sub" id="bookingSub">Choose dates & quantity inside the secure booking window.</div>
+      </div>
+      <div class="actions">
+        <a class="btn ghost" data-wa-link href="#" rel="noopener">WhatsApp</a>
+        <button class="btn" data-close-booking>Close</button>
+      </div>
+    </div>
+    <iframe id="beds24Frame" title="Beds24 Booking" allow="payment *; fullscreen *" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FAQ Bot -->
+<button class="bot-fab" id="botFab" aria-label="Open chat">?</button>
+<div class="bot" id="botPanel" aria-hidden="true">
+  <div class="bot-header">
+    <strong id="botTitle">Support</strong>
+    <button id="botClose">Close</button>
+  </div>
+  <div class="bot-body" id="botBody"></div>
+  <div class="bot-input">
+    <input id="botInput" type="text" placeholder="Ask a question…">
+    <button class="btn primary send" id="botSend">Send</button>
+  </div>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/tawk.js"></script>
+<script src="assets/js/booking.js"></script>
+<script src="assets/js/faqbot.js?v=20260130-1"></script>
+<script src="assets/js/page.js"></script>
+
+</body>
+</html>
